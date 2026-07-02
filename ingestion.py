@@ -81,19 +81,28 @@ async def main():
     log_header("DOCUMENTATION INGESTION PIPELINE")
 
     log_info(
-        "TavilyCrawl: Starting to Crawl documentation from https://docs.langchain.com/oss/python/langchain/overview",
+        "TavilyCrawl: Starting to Crawl documentation from https://docs.langchain.com/",
         Colors.PURPLE,
     )
 
-    # Crawl langchain documentation using TavilyCrawl
-    result = tavily_crawl.invoke({
-        "url": "https://docs.langchain.com/oss/python/langchain/overview",
-        "max_depth": 5,
-        "extract_depth": "advanced",
-    })
-    
-    # Create list of langchain documents from results list
-    all_docs = [Document(page_content=result['raw_content'], metadata={"source": result['url']}) for result in result['results'] if result['raw_content'] is not None]
+    all_docs = []
+
+    urls = [
+        "https://docs.langchain.com/oss/python/langchain/overview",
+        "https://docs.langchain.com/oss/python/langgraph/overview",
+        "https://docs.langchain.com/oss/python/langsmith/overview", 
+    ]
+
+    for url in urls:
+        # Crawl langchain documentation using TavilyCrawl
+        result = tavily_crawl.invoke({
+            "url": "https://docs.langchain.com/",
+            "max_depth": 5,
+            "extract_depth": "advanced",
+        })
+
+        docs = [Document(page_content=result['raw_content'], metadata={"source": result['url']}) for result in result['results'] if result['raw_content'] is not None]
+        all_docs.extend(docs)
     
     log_success(
         f"TavilyCrawl: Successfully crawled {len(all_docs)} URLs from documentation site"
