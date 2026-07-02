@@ -26,7 +26,7 @@ embeddings = OpenAIEmbeddings(
 )
 
 # Create pinecone vector store
-vectorstore = PineconeVectorStore(index_name="langchain-docs-2025", embedding=embeddings)
+vectorstore = PineconeVectorStore(index_name="langchain-docs-2026", embedding=embeddings)
 tavily_extract = TavilyExtract()
 tavily_map = TavilyMap(max_depth=5, max_breadth=20, max_pages=1000)
 tavily_crawl = TavilyCrawl()
@@ -81,20 +81,19 @@ async def main():
     log_header("DOCUMENTATION INGESTION PIPELINE")
 
     log_info(
-        "TavilyCrawl: Starting to Crawl documentation from https://python.langchain.com/",
+        "TavilyCrawl: Starting to Crawl documentation from https://docs.langchain.com/oss/python/langchain/overview",
         Colors.PURPLE,
     )
 
     # Crawl langchain documentation using TavilyCrawl
     result = tavily_crawl.invoke({
-        "url": "https://python.langchain.com/",
+        "url": "https://docs.langchain.com/oss/python/langchain/overview",
         "max_depth": 5,
         "extract_depth": "advanced",
-        "instructions": "content on ai agents"
     })
     
     # Create list of langchain documents from results list
-    all_docs = [Document(page_content=result['raw_content'], metadata={"source": result['url']}) for result in result['results']]
+    all_docs = [Document(page_content=result['raw_content'], metadata={"source": result['url']}) for result in result['results'] if result['raw_content'] is not None]
     
     log_success(
         f"TavilyCrawl: Successfully crawled {len(all_docs)} URLs from documentation site"
@@ -119,15 +118,9 @@ async def main():
     log_header("PIPELINE COMPLETE")
     log_success("🎉 Documentation ingestion pipeline finished successfully!")
     log_info("📊 Summary:", Colors.BOLD)
-    log_info(f"   • Pages crawled: {len(all_docs)}")
+    log_info(f"   • Pages crawled: {len(result['results'])}")
     log_info(f"   • Documents extracted: {len(all_docs)}")
     log_info(f"   • Chunks created: {len(splitted_docs)}")
-
-
-
-
-
-
 
 if __name__ == "__main__":
     asyncio.run(main())
