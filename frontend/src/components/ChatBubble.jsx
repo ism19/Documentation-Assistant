@@ -1,27 +1,34 @@
 import { useState } from "react"
 
-const [copied, setCopied] = useState(false)
+export default function ChatBubble({ message }) {
+    const [copied, setCopied] = useState(false)
 
-function copyText() {
-    setCopied(true)
-    navigator.clipboard.writeText(content)
-    setTimeout(() => setCopied(false), 2000)
-}
+    function copyText() {
+        setCopied(true)
+        navigator.clipboard.writeText(message.content)
+        setTimeout(() => setCopied(false), 2000)
+    }
 
-export default function ChatBubble({role, content}) {
-    return (role === "assistant") ? (
+    return (message.role === "assistant") ? (
         <div className="assistant-msg-wrapper">
             <div className="assistant-msg">
-                {content}
+                <p>{message.content}</p>
+                {message.sources && (
+                    <div className="sources">
+                        {message.sources.map((src, i) => (
+                            <a key={i} href={src} target="_blank">{src}</a>
+                        ))}
+                    </div>
+                )}
             </div>
             <button 
                 className="copy-button" 
                 onClick={copyText}
-            ><img src="../../assets/copy-button-blue.svg"/></button>
+            ><img src={copied ? "../../assets/checkmark-white.svg" : "../../assets/copy-button-blue.svg"}/></button>
         </div>
     ) : (
         <div className="user-msg">
-            {content}
+            <p>{message.content}</p>
         </div>
     )
 }
