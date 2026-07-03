@@ -27,6 +27,11 @@ function App() {
     setLoading(false)
     setQuery("")
   }
+
+  function clearChat() {
+    setMessages([])
+    setQuery("")
+  }
 }
 
 export default App;
