@@ -1,7 +1,5 @@
 import { useState } from "react";
-import ChatBubble from "./components/ChatBubble";
 import ChatWindow from "./components/ChatWindow";
-import ChatInput from "./components/ChatInput";
 import SideBar from "./components/SideBar";
 
 function App() {
@@ -27,6 +25,7 @@ function App() {
       sources: data.context.map(doc => doc.metadata.source)
     }])
     setLoading(false)
+    setQuery("")
   }
 }
 

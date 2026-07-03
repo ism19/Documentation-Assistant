@@ -1,4 +1,4 @@
-export default function ChatInput({query, setQuery, onSend}) {
+export default function ChatInput({query, setQuery, onSend, loading}) {
     return (
         <div className="input-box-wrapper">
             <input 
@@ -16,6 +16,7 @@ export default function ChatInput({query, setQuery, onSend}) {
             <button 
                 className="send-button"
                 onClick={onSend}
+                disabled={loading}
             ><img src="../../assets/send-button-yellow.svg"/></button>
         </div>
     )
