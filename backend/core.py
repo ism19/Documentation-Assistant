@@ -8,6 +8,19 @@ from langchain.tools import tool
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 load_dotenv()
 
 # initialize embeddings model
@@ -80,7 +93,13 @@ def run_llm(query: str) -> Dict[str, Any]:
         "context": context_docs
     }
 
-if __name__ == '__main__':
-    result = run_llm(query="what are deep agents?")
-    print(result)
+class QueryRequest(BaseModel):
+    query: str
+
+@app.post("/query")
+def query(request: QueryRequest):
+    result = run_llm(request.query)
+    return result
+
+
 
