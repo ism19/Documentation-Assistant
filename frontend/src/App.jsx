@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatWindow from "./components/ChatWindow";
 import SideBar from "./components/SideBar";
 
@@ -7,7 +7,14 @@ function App() {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    fetch("http://localhost:8000/history")
+      .then(result => result.json())
+      .then(data => setMessages(data))
+  }, [])
+
   async function onSend() {
+    setQuery("")
     setLoading(true)
     setMessages(prev => [...prev, { role: "user", content: query }])
 
@@ -25,7 +32,6 @@ function App() {
       sources: data.context.map(doc => doc.metadata.source)
     }])
     setLoading(false)
-    setQuery("")
   }
 
   function clearChat() {

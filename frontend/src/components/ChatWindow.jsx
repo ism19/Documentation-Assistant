@@ -11,7 +11,7 @@ export default function ChatWindow({ messages, query, setQuery, onSend, loading 
 
     return (
         <div className="chat-window-wrapper">
-            {messages.map((msg, i) => (
+            {messages?.map((msg, i) => (
                 <ChatBubble key={i} message={msg}/>
             ))}
             <div ref={bottomRef}/>
