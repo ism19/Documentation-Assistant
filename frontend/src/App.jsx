@@ -32,6 +32,25 @@ function App() {
     setMessages([])
     setQuery("")
   }
+
+  return (
+    <div className="app-body">
+      <div className="main-window">
+        <ChatWindow
+          messages={messages}
+          query={query}
+          setQuery={setQuery}
+          onSend={onSend}
+          loading={loading}
+        />
+      </div>
+      <div className="side-bar">
+        <SideBar
+          clearChat={clearChat}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default App;

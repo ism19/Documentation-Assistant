@@ -17,7 +17,7 @@ export default function ChatInput({query, setQuery, onSend, loading}) {
                 className="send-button"
                 onClick={onSend}
                 disabled={loading}
-            ><img src="../../assets/send-button-yellow.svg"/></button>
+            ><img src={(loading || query.trim() === "") ? "../../assets/send-button-disabled.svg" : "../../assets/send-button-yellow.svg"}/></button>
         </div>
     )
 }
