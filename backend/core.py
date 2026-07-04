@@ -1,6 +1,7 @@
 import os
 from typing import Any, Dict
 from dotenv import load_dotenv
+
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langchain.messages import ToolMessage
@@ -12,6 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+import json
 import aiosqlite
 from contextlib import asynccontextmanager
 
@@ -30,8 +32,28 @@ async def init_db():
             )
         """)
         await db.commit()
-        import os
-        print(os.getcwd())
+
+async def save_message(role: str, content: str, sources: list = None):
+    async with aiosqlite.connect("chat_history.db") as db:
+        await db.execute(
+            "INSERT INTO messages (role, content, sources) VALUES (?, ?, ?)",
+            (role, content, json.dumps(sources) if sources else None)
+        )
+        await db.commit()
+
+async def get_history():
+    messages = []
+    async with aiosqlite.connect("chat_history.db") as db:
+        async for row in await db.execute(
+            "SELECT role, content, sources FROM messages ORDER BY timestamp ASC"
+        ):
+            messages.append({
+                "role": row[0],
+                "content": row[1],
+                "sources": json.loads(row[2]) if row[2] else None          
+            })
+    return messages
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -121,9 +143,14 @@ class QueryRequest(BaseModel):
     query: str
 
 @app.post("/query")
-def query(request: QueryRequest):
+async def query(request: QueryRequest):
+    await save_message("user", request.query)
     result = run_llm(request.query)
+    sources = [doc.metadata.get("source") for doc in result["context"]]
+    await save_message("assistant", result["answer"], sources)
     return result
 
-
+@app.get("/history")
+async def history():
+    return await get_history()
 
