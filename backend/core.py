@@ -154,3 +154,10 @@ async def query(request: QueryRequest):
 async def history():
     return await get_history()
 
+@app.delete("/history")
+async def delete_history():
+    async with aiosqlite.connect("chat_history.db") as db:
+        await db.execute("DELETE FROM messages")
+        await db.commit()
+
+

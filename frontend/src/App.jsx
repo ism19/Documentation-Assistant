@@ -34,7 +34,8 @@ function App() {
     setLoading(false)
   }
 
-  function clearChat() {
+  async function clearChat() {
+    await fetch("http://localhost:8000/history", {method: "DELETE"})
     setMessages([])
     setQuery("")
   }
