@@ -1,4 +1,6 @@
 import { useState } from "react"
+import "../style/ChatBubble.css"
+import ReactMarkdown from "react-markdown"
 
 export default function ChatBubble({ message }) {
     const [copied, setCopied] = useState(false)
@@ -12,10 +14,11 @@ export default function ChatBubble({ message }) {
     return (message.role === "assistant") ? (
         <div className="assistant-msg-wrapper">
             <div className="assistant-msg">
-                <p>{message.content}</p>
+                <ReactMarkdown>{message.content}</ReactMarkdown>
                 {message.sources && (
                     <div className="sources">
-                        {message.sources.map((src, i) => (
+                        <h3 id="sources">Sources</h3>
+                        {[...new Set(message.sources)].map((src, i) => (
                             <a key={i} href={src} target="_blank">{src}</a>
                         ))}
                     </div>

@@ -1,6 +1,7 @@
 import ChatBubble from "./ChatBubble";
 import ChatInput from "./ChatInput";
 import { useRef, useEffect } from "react";
+import "../style/ChatWindow.css"
 
 export default function ChatWindow({ messages, query, setQuery, onSend, loading }) {
     const bottomRef = useRef(null)
@@ -11,10 +12,12 @@ export default function ChatWindow({ messages, query, setQuery, onSend, loading 
 
     return (
         <div className="chat-window-wrapper">
-            {messages?.map((msg, i) => (
-                <ChatBubble key={i} message={msg}/>
-            ))}
-            <div ref={bottomRef}/>
+            <div className="chat-scroll-window">
+                {messages?.map((msg, i) => (
+                    <ChatBubble key={i} message={msg}/>
+                ))}
+                <div ref={bottomRef}/>
+            </div>
             <ChatInput query={query} setQuery={setQuery} onSend={onSend} loading={loading}/>
         </div>
     )

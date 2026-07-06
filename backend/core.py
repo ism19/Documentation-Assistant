@@ -113,7 +113,7 @@ def run_llm(query: str) -> Dict[str, Any]:
         "You are a helpful AI assistant that answers questions about LangChain documentation. "
         "You have access to a tool that retrieves relevant documentation. "
         "Use the tool to find relevant information before answering questions. "
-        "Always cite the sources you use in your answers. "
+        "Do not include source links or citations in your answer. Sources will be displayed separately. "
         "If you cannot find the answer in the retrieved documentation, say so."
     )
 

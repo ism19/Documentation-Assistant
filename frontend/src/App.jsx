@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ChatWindow from "./components/ChatWindow";
 import SideBar from "./components/SideBar";
+import "./style/App.css"
 
 function App() {
   const [query, setQuery] = useState("")
@@ -42,6 +43,11 @@ function App() {
 
   return (
     <div className="app-body">
+      <div className="side-bar">
+        <SideBar
+          clearChat={clearChat}
+        />
+      </div>
       <div className="main-window">
         <ChatWindow
           messages={messages}
@@ -49,11 +55,6 @@ function App() {
           setQuery={setQuery}
           onSend={onSend}
           loading={loading}
-        />
-      </div>
-      <div className="side-bar">
-        <SideBar
-          clearChat={clearChat}
         />
       </div>
     </div>
