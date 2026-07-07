@@ -17,4 +17,9 @@ body {
     display: flex;
     justify-content: center;
     width: 100%;
+    flex: 1;
+}
+
+.side-bar {
+    flex-shrink: 0;
 }
